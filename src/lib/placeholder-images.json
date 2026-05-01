@@ -1,3 +1,28 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "serene-nature",
+      "description": "A serene forest at dawn with sunlight filtering through trees",
+      "imageUrl": "https://picsum.photos/seed/forest/1200/800",
+      "imageHint": "serene forest"
+    },
+    {
+      "id": "abstract-geometric",
+      "description": "Abstract geometric patterns in dark shades and orange accents",
+      "imageUrl": "https://picsum.photos/seed/abstract/1200/800",
+      "imageHint": "abstract geometric"
+    },
+    {
+      "id": "cityscape-night",
+      "description": "Blurred city lights at night from a high vantage point",
+      "imageUrl": "https://picsum.photos/seed/city/1200/800",
+      "imageHint": "city night"
+    },
+    {
+      "id": "minimal-desk",
+      "description": "A minimalist workspace with a single cup of coffee",
+      "imageUrl": "https://picsum.photos/seed/minimal/1200/800",
+      "imageHint": "minimalist desk"
+    }
+  ]
 }
