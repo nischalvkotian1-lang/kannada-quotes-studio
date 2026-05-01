@@ -1,8 +1,7 @@
-
 "use client";
 
 import { useState, useRef } from "react";
-import { Share2, Copy, Heart, Check, Image as ImageIcon, User, Camera, X } from "lucide-react";
+import { Share2, Copy, Heart, Check, Image as ImageIcon, User, Camera, X, Sparkles } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,6 +15,15 @@ interface QuoteCardProps {
   quote: Quote;
 }
 
+const CATEGORY_BGS: Record<string, string> = {
+  life: "https://picsum.photos/seed/nature-life/800/600",
+  motivation: "https://picsum.photos/seed/mountain-success/800/600",
+  love: "https://picsum.photos/seed/sunset-love/800/600",
+  success: "https://picsum.photos/seed/city-tech/800/600",
+  friendship: "https://picsum.photos/seed/coffee-friends/800/600",
+  all: "https://picsum.photos/seed/abstract-art/800/600",
+};
+
 export function QuoteCard({ quote }: QuoteCardProps) {
   const { toggleFavorite, isFavorite } = useFavorites();
   const [copied, setCopied] = useState(false);
@@ -24,6 +32,8 @@ export function QuoteCard({ quote }: QuoteCardProps) {
   const [userPhoto, setUserPhoto] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+
+  const bgImage = CATEGORY_BGS[quote.category] || CATEGORY_BGS.all;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(quote.text);
@@ -65,117 +75,132 @@ export function QuoteCard({ quote }: QuoteCardProps) {
   const makerUrl = `/maker?quote=${encodeURIComponent(quote.text)}${userName ? `&name=${encodeURIComponent(userName)}` : ''}${userPhoto ? `&photo=${encodeURIComponent(userPhoto)}` : ''}`;
 
   return (
-    <Card className="group relative p-8 glass hover:bg-white/[0.04] border-white/10 transition-all duration-700 overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)] rounded-[3rem] border-t-white/20">
-      {/* Premium Mesh Gradient Accents */}
-      <div className="absolute -top-32 -right-32 w-64 h-64 bg-primary/15 blur-[100px] rounded-full transition-opacity duration-700 group-hover:bg-primary/25" />
-      <div className="absolute -bottom-32 -left-32 w-64 h-64 bg-orange-600/10 blur-[100px] rounded-full opacity-60" />
-      
-      {/* Subtle Label */}
-      <div className="mb-6 flex items-center justify-between relative z-10">
-        <div className="flex items-center gap-2">
-          <div className="h-1 w-8 rounded-full bg-primary/40" />
-          <span className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/70">{quote.category}</span>
-        </div>
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          onClick={() => setIsPersonalizing(!isPersonalizing)}
-          className={cn(
-            "h-8 rounded-full px-4 text-[9px] font-black uppercase tracking-widest transition-all",
-            isPersonalizing ? "bg-primary text-black" : "glass text-muted-foreground"
-          )}
-        >
-          {isPersonalizing ? <X size={12} className="mr-1" /> : <User size={12} className="mr-1" />}
-          Personalize
-        </Button>
+    <Card className="group relative w-full glass hover:bg-white/[0.04] border-white/10 transition-all duration-700 overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)] rounded-[2.5rem] border-t-white/20">
+      {/* Dynamic Background Layer */}
+      <div className="absolute inset-0 z-0">
+        <img 
+          src={bgImage} 
+          alt={quote.category}
+          className="w-full h-full object-cover opacity-40 group-hover:scale-110 transition-transform duration-1000"
+          data-ai-hint={`${quote.category} background`}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black/90 backdrop-blur-[2px]" />
       </div>
 
-      <p className="kannada-text text-[1.65rem] font-bold leading-[1.45] mb-12 text-foreground/95 relative z-10 tracking-tight drop-shadow-sm">
-        {quote.text}
-      </p>
-
-      {/* Optional Personalization Section */}
-      {isPersonalizing && (
-        <div className="mb-8 p-6 glass rounded-[2rem] border-white/5 space-y-4 animate-in fade-in slide-in-from-top-4 duration-500 relative z-10">
-          <div className="flex items-center gap-4">
-            <button 
-              onClick={() => fileInputRef.current?.click()}
-              className="h-16 w-16 rounded-2xl bg-black/40 border border-white/10 flex items-center justify-center overflow-hidden hover:border-primary/50 transition-colors group/photo"
-            >
-              {userPhoto ? (
-                <img src={userPhoto} alt="User" className="h-full w-full object-cover" />
-              ) : (
-                <Camera size={24} className="text-muted-foreground group-hover/photo:text-primary transition-colors" />
-              )}
-            </button>
-            <div className="flex-1 space-y-2">
-              <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">Your Name (Optional)</label>
-              <Input 
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
-                placeholder="Ex: Rakesh Gowda"
-                className="bg-black/20 border-white/5 h-10 rounded-xl text-sm focus:ring-primary"
-              />
-            </div>
+      <div className="relative z-10 p-6 sm:p-8 flex flex-col min-h-[320px]">
+        {/* Header Section */}
+        <div className="mb-6 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="h-1.5 w-8 rounded-full bg-primary/60" />
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/80">{quote.category}</span>
           </div>
-          <input 
-            type="file" 
-            ref={fileInputRef} 
-            onChange={handlePhotoUpload} 
-            accept="image/*" 
-            className="hidden" 
-          />
-        </div>
-      )}
-      
-      <div className="flex items-center justify-between relative z-10">
-        <div className="flex gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => toggleFavorite(quote.id)}
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => setIsPersonalizing(!isPersonalizing)}
             className={cn(
-              "h-12 w-12 rounded-2xl transition-all duration-500",
-              isFavorite(quote.id) 
-                ? "text-primary bg-primary/20 shadow-[0_0_25px_rgba(255,149,0,0.3)] border border-primary/20" 
-                : "text-muted-foreground hover:bg-white/10 glass border border-white/5"
+              "h-9 rounded-2xl px-4 text-[10px] font-black uppercase tracking-widest transition-all",
+              isPersonalizing ? "bg-primary text-black" : "glass text-muted-foreground hover:text-white"
             )}
           >
-            <Heart 
-              size={22} 
-              fill={isFavorite(quote.id) ? "currentColor" : "none"} 
-              className={cn("transition-transform duration-500", isFavorite(quote.id) && "scale-110 animate-pulse")} 
-            />
-          </Button>
-          
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleCopy}
-            className="h-12 w-12 rounded-2xl text-muted-foreground hover:bg-white/10 glass border border-white/5 transition-all active:scale-90"
-          >
-            {copied ? <Check size={22} className="text-primary" /> : <Copy size={22} />}
-          </Button>
-          
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleShare}
-            className="h-12 w-12 rounded-2xl text-muted-foreground hover:bg-white/10 glass border border-white/5 transition-all active:scale-90"
-          >
-            <Share2 size={22} />
+            {isPersonalizing ? <X size={14} className="mr-2" /> : <User size={14} className="mr-2" />}
+            Personalize
           </Button>
         </div>
 
-        <Link href={makerUrl}>
-          <Button 
-            size="lg" 
-            className="h-12 gradient-orange text-black font-black gap-2 rounded-2xl px-6 glow-primary border-none hover:scale-[1.05] active:scale-[0.95] transition-all shadow-xl"
-          >
-            <ImageIcon size={18} />
-            <span className="text-[10px] uppercase tracking-[0.15em] font-black">Design</span>
-          </Button>
-        </Link>
+        {/* Content Section */}
+        <div className="flex-grow mb-8">
+          <p className="kannada-text text-[1.5rem] sm:text-[1.75rem] font-bold leading-[1.4] text-white drop-shadow-lg">
+            {quote.text}
+          </p>
+        </div>
+
+        {/* Optional Personalization Section */}
+        {isPersonalizing && (
+          <div className="mb-8 p-5 glass rounded-3xl border-white/10 space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
+            <div className="flex items-center gap-4">
+              <button 
+                onClick={() => fileInputRef.current?.click()}
+                className="h-14 w-14 rounded-xl bg-black/40 border border-white/10 flex items-center justify-center overflow-hidden hover:border-primary/50 transition-colors group/photo"
+              >
+                {userPhoto ? (
+                  <img src={userPhoto} alt="User" className="h-full w-full object-cover" />
+                ) : (
+                  <Camera size={20} className="text-muted-foreground group-hover/photo:text-primary transition-colors" />
+                )}
+              </button>
+              <div className="flex-1 space-y-1.5">
+                <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">Profile Name</label>
+                <Input 
+                  value={userName}
+                  onChange={(e) => setUserName(e.target.value)}
+                  placeholder="Your Name..."
+                  className="bg-black/40 border-white/5 h-10 rounded-xl text-xs focus:ring-primary"
+                />
+              </div>
+            </div>
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              onChange={handlePhotoUpload} 
+              accept="image/*" 
+              className="hidden" 
+            />
+          </div>
+        )}
+        
+        {/* Footer Actions */}
+        <div className="flex items-center justify-between gap-3 mt-auto">
+          <div className="flex gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => toggleFavorite(quote.id)}
+              className={cn(
+                "h-11 w-11 rounded-2xl transition-all duration-500",
+                isFavorite(quote.id) 
+                  ? "text-primary bg-primary/20 border border-primary/20 shadow-[0_0_20px_rgba(255,149,0,0.2)]" 
+                  : "text-muted-foreground hover:bg-white/10 glass border border-white/5"
+              )}
+            >
+              <Heart 
+                size={20} 
+                fill={isFavorite(quote.id) ? "currentColor" : "none"} 
+                className={cn("transition-transform duration-500", isFavorite(quote.id) && "scale-110")} 
+              />
+            </Button>
+            
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleCopy}
+              className="h-11 w-11 rounded-2xl text-muted-foreground hover:bg-white/10 glass border border-white/5 transition-all active:scale-90"
+            >
+              {copied ? <Check size={20} className="text-primary" /> : <Copy size={20} />}
+            </Button>
+          </div>
+
+          <div className="flex gap-2 flex-grow justify-end">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleShare}
+              className="h-11 w-11 rounded-2xl text-muted-foreground hover:bg-white/10 glass border border-white/5 transition-all active:scale-90"
+            >
+              <Share2 size={20} />
+            </Button>
+
+            <Link href={makerUrl} className="flex-grow sm:flex-grow-0">
+              <Button 
+                size="lg" 
+                className="w-full h-11 gradient-orange text-black font-black gap-2 rounded-2xl px-5 glow-primary border-none hover:scale-[1.05] active:scale-[0.95] transition-all"
+              >
+                <ImageIcon size={16} />
+                <span className="text-[10px] uppercase tracking-widest font-black">Design</span>
+              </Button>
+            </Link>
+          </div>
+        </div>
       </div>
     </Card>
   );
