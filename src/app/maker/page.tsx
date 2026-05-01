@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useRef } from "react";
@@ -5,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { BottomNav } from "@/components/navigation/BottomNav";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Download, Layers, Type, Palette, ChevronLeft } from "lucide-react";
+import { Download, Layers, Type, Palette, ChevronLeft, User, Camera } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
@@ -31,13 +32,18 @@ const PRESET_LAYOUTS = [
 export default function StatusMakerPage() {
   const searchParams = useSearchParams();
   const initialQuote = searchParams.get("quote") || "ಬದುಕಿನ ಹಾದಿ ಅಷ್ಟು ಸುಲಭವಲ್ಲ, ಆದರೆ ಅಸಾಧ್ಯವೇನಲ್ಲ.";
+  const initialName = searchParams.get("name") || "";
+  const initialPhoto = searchParams.get("photo") || null;
   
   const [quote, setQuote] = useState(initialQuote);
+  const [name, setName] = useState(initialName);
+  const [photo, setPhoto] = useState(initialPhoto);
   const [background, setBackground] = useState(PlaceHolderImages[0].imageUrl);
   const [colors, setColors] = useState(PRESET_PALETTES[0]);
   const [textLayout, setTextLayout] = useState(PRESET_LAYOUTS[0]);
 
   const canvasRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
   const handleDownload = () => {
@@ -45,6 +51,17 @@ export default function StatusMakerPage() {
       title: "Design Exported",
       description: "Successfully saved to your library.",
     });
+  };
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhoto(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
@@ -74,12 +91,12 @@ export default function StatusMakerPage() {
             alt="Status Background" 
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-110"
           />
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-[1px]" />
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-[1px]" />
           
           <div className={cn(
             "absolute inset-0 flex p-10 text-center",
-            textLayout.includes("Bottom") ? "items-end pb-20" : 
-            textLayout.includes("Top") ? "items-start pt-20" : "items-center"
+            textLayout.includes("Bottom") ? "items-end pb-24" : 
+            textLayout.includes("Top") ? "items-start pt-24" : "items-center"
           )}>
             <p className={cn(
               "kannada-text text-3xl leading-[1.4] drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)] w-full",
@@ -91,8 +108,24 @@ export default function StatusMakerPage() {
             </p>
           </div>
 
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 glass-dark px-4 py-1.5 rounded-full border border-white/5">
-            <span className="text-[9px] text-white/40 font-black uppercase tracking-[0.3em]">Studio Creator</span>
+          {/* User Branding Overlay */}
+          {(name || photo) && (
+            <div className="absolute bottom-10 left-10 right-10 flex items-center gap-3 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+              {photo ? (
+                <img src={photo} alt="User" className="h-10 w-10 rounded-xl border border-white/20 shadow-lg object-cover" />
+              ) : (
+                <div className="h-10 w-10 rounded-xl bg-white/10 flex items-center justify-center border border-white/10">
+                  <User size={16} className="text-white/60" />
+                </div>
+              )}
+              {name && (
+                <span className="text-sm font-bold text-white/90 drop-shadow-md">{name}</span>
+              )}
+            </div>
+          )}
+
+          <div className="absolute top-6 right-6 glass-dark px-3 py-1 rounded-full border border-white/5">
+            <span className="text-[7px] text-white/30 font-black uppercase tracking-[0.3em]">Studio Creator</span>
           </div>
         </div>
 
@@ -107,6 +140,34 @@ export default function StatusMakerPage() {
                 className="kannada-text min-h-[120px] bg-black/40 border-white/5 text-xl font-bold rounded-3xl resize-none focus:ring-primary focus:border-primary/50"
                 placeholder="Write something powerful..."
               />
+            </div>
+
+            {/* Quick Personalize in Maker */}
+            <div className="p-4 bg-white/5 rounded-3xl border border-white/5 space-y-4">
+              <div className="flex items-center justify-between px-2">
+                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Author Branding</span>
+                <User size={12} className="text-primary" />
+              </div>
+              <div className="flex items-center gap-4">
+                <button 
+                  onClick={() => fileInputRef.current?.click()}
+                  className="h-12 w-12 rounded-xl bg-black/40 border border-white/10 flex items-center justify-center overflow-hidden hover:border-primary transition-colors"
+                >
+                  {photo ? (
+                    <img src={photo} alt="User" className="h-full w-full object-cover" />
+                  ) : (
+                    <Camera size={18} className="text-muted-foreground" />
+                  )}
+                </button>
+                <input 
+                  type="text" 
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Your Name..."
+                  className="bg-transparent border-none text-sm font-bold focus:ring-0 flex-1"
+                />
+              </div>
+              <input type="file" ref={fileInputRef} onChange={handlePhotoUpload} accept="image/*" className="hidden" />
             </div>
             
             <Button 

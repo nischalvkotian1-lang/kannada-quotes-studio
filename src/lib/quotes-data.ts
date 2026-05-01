@@ -15,6 +15,10 @@ export const categories = [
   { id: "friendship", label: "ಸ್ನೇಹ", icon: "🤝" }
 ];
 
+export function getQuoteById(id: string): Quote | undefined {
+  return quotes.find(q => q.id === id);
+}
+
 export const quotes: Quote[] = [
   // Motivation
   { id: "1", category: "motivation", text: "ಗೆಲುವಿನ ಹಾದಿಯಲ್ಲಿ ಸಾವಿರಾರು ಕಲ್ಲುಗಳು ಸಿಗಬಹುದು, ಆದರೆ ಅವುಗಳನ್ನು ಮೆಟ್ಟಿ ನಿಂತಾಗಲೇ ಶಿಖರ ತಲುಪಲು ಸಾಧ್ಯ." },
