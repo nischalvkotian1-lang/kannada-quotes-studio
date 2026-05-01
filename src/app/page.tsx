@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -7,7 +6,7 @@ import { QuoteCard } from "@/components/quotes/QuoteCard";
 import { AdBanner } from "@/components/ads/AdBanner";
 import { quotes, categories } from "@/lib/quotes-data";
 import { cn } from "@/lib/utils";
-import { Search } from "lucide-react";
+import { Search, Sparkles } from "lucide-react";
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -17,35 +16,40 @@ export default function Home() {
     : quotes.filter(q => q.category === selectedCategory);
 
   return (
-    <div className="pb-28">
+    <div className="pb-32 page-transition">
       {/* Header */}
-      <header className="px-6 pt-8 pb-4 sticky top-0 bg-background/80 backdrop-blur-lg z-20 flex flex-col gap-4">
+      <header className="px-6 pt-10 pb-6 sticky top-0 bg-background/60 backdrop-blur-2xl z-20 flex flex-col gap-6">
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold font-headline tracking-tight">
-              Kannada <span className="text-primary">Studio</span>
-            </h1>
-            <p className="text-xs text-muted-foreground">Express yourself in Kannada</p>
+          <div className="flex items-center gap-3">
+            <div className="h-12 w-12 rounded-2xl gradient-orange flex items-center justify-center glow-primary">
+              <Sparkles className="text-black" size={24} />
+            </div>
+            <div>
+              <h1 className="text-2xl font-black tracking-tighter">
+                KANNADA <span className="text-primary">STUDIO</span>
+              </h1>
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Premium Collection</p>
+            </div>
           </div>
-          <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-primary transition-colors cursor-pointer">
-            <Search size={20} />
-          </div>
+          <button className="h-12 w-12 rounded-2xl glass flex items-center justify-center text-muted-foreground hover:text-primary transition-all hover:scale-110 active:scale-95">
+            <Search size={22} />
+          </button>
         </div>
 
         {/* Category horizontal scroll */}
-        <div className="flex overflow-x-auto gap-2 no-scrollbar pb-2">
+        <div className="flex overflow-x-auto gap-3 no-scrollbar py-2">
           {categories.map((cat) => (
             <button
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
               className={cn(
-                "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300 border",
+                "flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-all duration-500 border",
                 selectedCategory === cat.id 
-                  ? "bg-primary border-primary text-primary-foreground shadow-lg shadow-primary/20" 
-                  : "bg-secondary/50 border-border/50 text-muted-foreground hover:border-primary/50 hover:text-foreground"
+                  ? "bg-primary border-primary text-black glow-primary scale-105" 
+                  : "glass border-white/10 text-muted-foreground hover:border-primary/50 hover:text-foreground"
               )}
             >
-              <span>{cat.icon}</span>
+              <span className="text-lg">{cat.icon}</span>
               <span>{cat.label}</span>
             </button>
           ))}
@@ -55,14 +59,20 @@ export default function Home() {
       <AdBanner />
 
       {/* Quotes list */}
-      <div className="px-6 space-y-6 mt-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-        {filteredQuotes.map((quote) => (
-          <QuoteCard key={quote.id} quote={quote} />
+      <div className="px-6 space-y-8 mt-6">
+        {filteredQuotes.map((quote, idx) => (
+          <div 
+            key={quote.id} 
+            className="animate-in fade-in slide-in-from-bottom-8 duration-700 fill-mode-both"
+            style={{ animationDelay: `${idx * 100}ms` }}
+          >
+            <QuoteCard quote={quote} />
+          </div>
         ))}
         
         {filteredQuotes.length === 0 && (
-          <div className="py-20 text-center">
-            <p className="text-muted-foreground">No quotes found for this category.</p>
+          <div className="py-24 text-center glass rounded-[2.5rem] border-dashed border-white/5 mx-6">
+            <p className="text-muted-foreground font-medium uppercase tracking-widest text-xs">No quotes found</p>
           </div>
         )}
       </div>

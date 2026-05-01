@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -26,7 +25,7 @@ export function QuoteCard({ quote, isFavorite: initialFavorite, onToggleFavorite
     setCopied(true);
     toast({
       title: "Copied!",
-      description: "Quote copied to clipboard.",
+      description: "Ready to paste in your status.",
     });
     setTimeout(() => setCopied(false), 2000);
   };
@@ -40,7 +39,7 @@ export function QuoteCard({ quote, isFavorite: initialFavorite, onToggleFavorite
           url: window.location.href,
         });
       } catch (err) {
-        console.error("Error sharing:", err);
+        handleCopy();
       }
     } else {
       handleCopy();
@@ -53,48 +52,52 @@ export function QuoteCard({ quote, isFavorite: initialFavorite, onToggleFavorite
   };
 
   return (
-    <Card className="group p-6 bg-card hover:bg-card/90 border-border/50 shadow-lg transition-all duration-300 overflow-hidden relative">
-      <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full -z-0 pointer-events-none group-hover:bg-primary/10 transition-colors" />
+    <Card className="group relative p-8 glass hover:bg-white/[0.03] border-white/10 transition-all duration-500 overflow-hidden shadow-xl rounded-[2.5rem]">
+      {/* Accent glow on hover */}
+      <div className="absolute -top-12 -right-12 w-24 h-24 bg-primary/20 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
       
-      <p className="kannada-text text-xl font-bold leading-relaxed mb-6 text-foreground/90 z-10 relative">
-        "{quote.text}"
+      <p className="kannada-text text-2xl font-bold leading-[1.6] mb-8 text-foreground/95 relative z-10">
+        {quote.text}
       </p>
       
-      <div className="flex items-center justify-between z-10 relative">
-        <div className="flex gap-2">
+      <div className="flex items-center justify-between relative z-10">
+        <div className="flex gap-1">
           <Button
             variant="ghost"
             size="icon"
             onClick={toggleFavorite}
             className={cn(
-              "h-9 w-9 rounded-full transition-all duration-300",
-              isFavorite ? "text-accent bg-accent/10 hover:bg-accent/20" : "text-muted-foreground hover:bg-secondary"
+              "h-10 w-10 rounded-full transition-all duration-300",
+              isFavorite ? "text-primary bg-primary/10" : "text-muted-foreground hover:bg-white/5"
             )}
           >
-            <Heart size={18} fill={isFavorite ? "currentColor" : "none"} />
+            <Heart size={20} fill={isFavorite ? "currentColor" : "none"} />
           </Button>
           <Button
             variant="ghost"
             size="icon"
             onClick={handleCopy}
-            className="h-9 w-9 rounded-full text-muted-foreground hover:bg-secondary"
+            className="h-10 w-10 rounded-full text-muted-foreground hover:bg-white/5"
           >
-            {copied ? <Check size={18} className="text-green-500" /> : <Copy size={18} />}
+            {copied ? <Check size={20} className="text-primary" /> : <Copy size={20} />}
           </Button>
           <Button
             variant="ghost"
             size="icon"
             onClick={handleShare}
-            className="h-9 w-9 rounded-full text-muted-foreground hover:bg-secondary"
+            className="h-10 w-10 rounded-full text-muted-foreground hover:bg-white/5"
           >
-            <Share2 size={18} />
+            <Share2 size={20} />
           </Button>
         </div>
 
         <Link href={`/maker?quote=${encodeURIComponent(quote.text)}`}>
-          <Button size="sm" variant="outline" className="h-9 border-primary/20 hover:border-primary/50 text-primary hover:bg-primary/5 gap-2 rounded-full px-4">
-            <ImageIcon size={14} />
-            <span className="text-xs font-semibold">Status Maker</span>
+          <Button 
+            size="sm" 
+            className="h-10 gradient-orange text-black font-bold gap-2 rounded-2xl px-5 glow-primary border-none hover:scale-105 transition-transform"
+          >
+            <ImageIcon size={16} />
+            <span className="text-xs uppercase tracking-wider">Maker</span>
           </Button>
         </Link>
       </div>
