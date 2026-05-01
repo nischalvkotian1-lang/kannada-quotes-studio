@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -6,14 +7,36 @@ import { QuoteCard } from "@/components/quotes/QuoteCard";
 import { AdBanner } from "@/components/ads/AdBanner";
 import { quotes, categories } from "@/lib/quotes-data";
 import { cn } from "@/lib/utils";
-import { Search, Sparkles } from "lucide-react";
+import { Search, Sparkles, Share2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const { toast } = useToast();
 
   const filteredQuotes = selectedCategory === "all" 
     ? quotes 
     : quotes.filter(q => q.category === selectedCategory);
+
+  const handleShareApp = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Kannada Quotes Studio',
+          text: 'Check out this amazing app to create beautiful Kannada status quotes!',
+          url: window.location.origin,
+        });
+      } catch (err) {
+        console.log('Error sharing', err);
+      }
+    } else {
+      navigator.clipboard.writeText(window.location.origin);
+      toast({
+        title: "Link Copied!",
+        description: "App link copied to clipboard.",
+      });
+    }
+  };
 
   return (
     <div className="pb-32 page-transition">
@@ -31,9 +54,17 @@ export default function Home() {
               <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Premium Collection</p>
             </div>
           </div>
-          <button className="h-12 w-12 rounded-2xl glass flex items-center justify-center text-muted-foreground hover:text-primary transition-all hover:scale-110 active:scale-95">
-            <Search size={22} />
-          </button>
+          <div className="flex gap-2">
+            <button 
+              onClick={handleShareApp}
+              className="h-12 w-12 rounded-2xl glass flex items-center justify-center text-muted-foreground hover:text-primary transition-all hover:scale-110 active:scale-95"
+            >
+              <Share2 size={20} />
+            </button>
+            <button className="h-12 w-12 rounded-2xl glass flex items-center justify-center text-muted-foreground hover:text-primary transition-all hover:scale-110 active:scale-95">
+              <Search size={22} />
+            </button>
+          </div>
         </div>
 
         {/* Category horizontal scroll */}
@@ -64,7 +95,7 @@ export default function Home() {
           <div 
             key={quote.id} 
             className="animate-in fade-in slide-in-from-bottom-8 duration-700 fill-mode-both"
-            style={{ animationDelay: `${idx * 100}ms` }}
+            style={{ animationDelay: `${idx * 50}ms` }}
           >
             <QuoteCard quote={quote} />
           </div>

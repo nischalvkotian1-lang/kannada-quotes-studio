@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useRef } from "react";
@@ -87,9 +88,9 @@ export function QuoteCard({ quote }: QuoteCardProps) {
         <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black/90 backdrop-blur-[2px]" />
       </div>
 
-      <div className="relative z-10 p-6 sm:p-8 flex flex-col min-h-[320px]">
+      <div className="relative z-10 p-6 sm:p-8 flex flex-col h-full min-h-[400px]">
         {/* Header Section */}
-        <div className="mb-6 flex items-center justify-between gap-4">
+        <div className="mb-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-2 flex-shrink-0">
             <div className="h-1.5 w-8 rounded-full bg-primary/60" />
             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/80">{quote.category}</span>
@@ -114,7 +115,7 @@ export function QuoteCard({ quote }: QuoteCardProps) {
         </div>
 
         {/* Content Section */}
-        <div className="flex-grow mb-8">
+        <div className="flex-grow mb-6">
           <p className="kannada-text text-[1.5rem] sm:text-[1.75rem] font-bold leading-[1.4] text-white drop-shadow-lg">
             {quote.text}
           </p>
@@ -122,25 +123,25 @@ export function QuoteCard({ quote }: QuoteCardProps) {
 
         {/* Optional Personalization Section */}
         {isPersonalizing && (
-          <div className="mb-8 p-5 glass rounded-3xl border-white/10 space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
+          <div className="mb-6 p-4 glass rounded-3xl border-white/10 space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
             <div className="flex items-center gap-4">
               <button 
                 onClick={() => fileInputRef.current?.click()}
-                className="h-14 w-14 rounded-xl bg-black/40 border border-white/10 flex items-center justify-center overflow-hidden hover:border-primary/50 transition-colors group/photo flex-shrink-0"
+                className="h-12 w-12 rounded-xl bg-black/40 border border-white/10 flex items-center justify-center overflow-hidden hover:border-primary/50 transition-colors group/photo flex-shrink-0"
               >
                 {userPhoto ? (
                   <img src={userPhoto} alt="User" className="h-full w-full object-cover" />
                 ) : (
-                  <Camera size={20} className="text-muted-foreground group-hover/photo:text-primary transition-colors" />
+                  <Camera size={18} className="text-muted-foreground group-hover/photo:text-primary transition-colors" />
                 )}
               </button>
-              <div className="flex-1 space-y-1.5 min-w-0">
-                <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">Profile Name</label>
+              <div className="flex-1 space-y-1 min-w-0">
+                <label className="text-[8px] font-black uppercase tracking-widest text-muted-foreground ml-1">Profile Name</label>
                 <Input 
                   value={userName}
                   onChange={(e) => setUserName(e.target.value)}
                   placeholder="Your Name..."
-                  className="bg-black/40 border-white/5 h-10 rounded-xl text-xs focus:ring-primary w-full"
+                  className="bg-black/40 border-white/5 h-9 rounded-xl text-xs focus:ring-primary w-full"
                 />
               </div>
             </div>
@@ -154,8 +155,8 @@ export function QuoteCard({ quote }: QuoteCardProps) {
           </div>
         )}
         
-        {/* Action Area */}
-        <div className="flex flex-col gap-4 mt-auto">
+        {/* Action Area - Guaranteed Visibility */}
+        <div className="flex flex-col gap-3 mt-auto pt-4 border-t border-white/5">
           {/* Icons Row */}
           <div className="flex items-center justify-between gap-2">
             <div className="flex gap-2">
@@ -191,8 +192,8 @@ export function QuoteCard({ quote }: QuoteCardProps) {
             </Button>
           </div>
 
-          {/* Primary Action */}
-          <Link href={makerUrl} className="w-full">
+          {/* Primary Action - Full Width & Fixed Height */}
+          <Link href={makerUrl} className="block w-full">
             <Button 
               className="w-full h-14 gradient-orange text-black font-black gap-3 rounded-2xl glow-primary border-none hover:scale-[1.02] active:scale-[0.98] transition-all"
             >
