@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { Share2, Copy, Heart, Check, Image as ImageIcon, User, Camera, X, Sparkles } from "lucide-react";
+import { Share2, Copy, Heart, Check, Image as ImageIcon, User, Camera, X } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -89,22 +89,27 @@ export function QuoteCard({ quote }: QuoteCardProps) {
 
       <div className="relative z-10 p-6 sm:p-8 flex flex-col min-h-[320px]">
         {/* Header Section */}
-        <div className="mb-6 flex items-center justify-between">
-          <div className="flex items-center gap-2">
+        <div className="mb-6 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2 flex-shrink-0">
             <div className="h-1.5 w-8 rounded-full bg-primary/60" />
             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/80">{quote.category}</span>
           </div>
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={() => setIsPersonalizing(!isPersonalizing)}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => toggleFavorite(quote.id)}
             className={cn(
-              "h-9 rounded-2xl px-4 text-[10px] font-black uppercase tracking-widest transition-all",
-              isPersonalizing ? "bg-primary text-black" : "glass text-muted-foreground hover:text-white"
+              "h-10 w-10 rounded-2xl transition-all duration-500",
+              isFavorite(quote.id) 
+                ? "text-primary bg-primary/20 border border-primary/20 shadow-[0_0_20px_rgba(255,149,0,0.2)]" 
+                : "text-muted-foreground hover:bg-white/10 glass border border-white/5"
             )}
           >
-            {isPersonalizing ? <X size={14} className="mr-2" /> : <User size={14} className="mr-2" />}
-            Personalize
+            <Heart 
+              size={18} 
+              fill={isFavorite(quote.id) ? "currentColor" : "none"} 
+              className={cn("transition-transform duration-500", isFavorite(quote.id) && "scale-110")} 
+            />
           </Button>
         </div>
 
@@ -121,7 +126,7 @@ export function QuoteCard({ quote }: QuoteCardProps) {
             <div className="flex items-center gap-4">
               <button 
                 onClick={() => fileInputRef.current?.click()}
-                className="h-14 w-14 rounded-xl bg-black/40 border border-white/10 flex items-center justify-center overflow-hidden hover:border-primary/50 transition-colors group/photo"
+                className="h-14 w-14 rounded-xl bg-black/40 border border-white/10 flex items-center justify-center overflow-hidden hover:border-primary/50 transition-colors group/photo flex-shrink-0"
               >
                 {userPhoto ? (
                   <img src={userPhoto} alt="User" className="h-full w-full object-cover" />
@@ -129,13 +134,13 @@ export function QuoteCard({ quote }: QuoteCardProps) {
                   <Camera size={20} className="text-muted-foreground group-hover/photo:text-primary transition-colors" />
                 )}
               </button>
-              <div className="flex-1 space-y-1.5">
+              <div className="flex-1 space-y-1.5 min-w-0">
                 <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">Profile Name</label>
                 <Input 
                   value={userName}
                   onChange={(e) => setUserName(e.target.value)}
                   placeholder="Your Name..."
-                  className="bg-black/40 border-white/5 h-10 rounded-xl text-xs focus:ring-primary"
+                  className="bg-black/40 border-white/5 h-10 rounded-xl text-xs focus:ring-primary w-full"
                 />
               </div>
             </div>
@@ -149,57 +154,52 @@ export function QuoteCard({ quote }: QuoteCardProps) {
           </div>
         )}
         
-        {/* Footer Actions */}
-        <div className="flex items-center justify-between gap-3 mt-auto">
-          <div className="flex gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => toggleFavorite(quote.id)}
+        {/* Action Area */}
+        <div className="flex flex-col gap-4 mt-auto">
+          {/* Icons Row */}
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex gap-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleCopy}
+                className="h-11 w-11 rounded-2xl text-muted-foreground hover:bg-white/10 glass border border-white/5 transition-all active:scale-90"
+              >
+                {copied ? <Check size={20} className="text-primary" /> : <Copy size={20} />}
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleShare}
+                className="h-11 w-11 rounded-2xl text-muted-foreground hover:bg-white/10 glass border border-white/5 transition-all active:scale-90"
+              >
+                <Share2 size={20} />
+              </Button>
+            </div>
+
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => setIsPersonalizing(!isPersonalizing)}
               className={cn(
-                "h-11 w-11 rounded-2xl transition-all duration-500",
-                isFavorite(quote.id) 
-                  ? "text-primary bg-primary/20 border border-primary/20 shadow-[0_0_20px_rgba(255,149,0,0.2)]" 
-                  : "text-muted-foreground hover:bg-white/10 glass border border-white/5"
+                "h-11 rounded-2xl px-4 text-[10px] font-black uppercase tracking-widest transition-all border",
+                isPersonalizing ? "bg-primary text-black border-primary glow-primary" : "glass text-muted-foreground border-white/5 hover:text-white"
               )}
             >
-              <Heart 
-                size={20} 
-                fill={isFavorite(quote.id) ? "currentColor" : "none"} 
-                className={cn("transition-transform duration-500", isFavorite(quote.id) && "scale-110")} 
-              />
-            </Button>
-            
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleCopy}
-              className="h-11 w-11 rounded-2xl text-muted-foreground hover:bg-white/10 glass border border-white/5 transition-all active:scale-90"
-            >
-              {copied ? <Check size={20} className="text-primary" /> : <Copy size={20} />}
+              {isPersonalizing ? <X size={14} className="mr-2" /> : <User size={14} className="mr-2" />}
+              Personalize
             </Button>
           </div>
 
-          <div className="flex gap-2 flex-grow justify-end">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleShare}
-              className="h-11 w-11 rounded-2xl text-muted-foreground hover:bg-white/10 glass border border-white/5 transition-all active:scale-90"
+          {/* Primary Action */}
+          <Link href={makerUrl} className="w-full">
+            <Button 
+              className="w-full h-14 gradient-orange text-black font-black gap-3 rounded-2xl glow-primary border-none hover:scale-[1.02] active:scale-[0.98] transition-all"
             >
-              <Share2 size={20} />
+              <ImageIcon size={20} />
+              <span className="text-[12px] uppercase tracking-[0.2em] font-black">Design Status</span>
             </Button>
-
-            <Link href={makerUrl} className="flex-grow sm:flex-grow-0">
-              <Button 
-                size="lg" 
-                className="w-full h-11 gradient-orange text-black font-black gap-2 rounded-2xl px-5 glow-primary border-none hover:scale-[1.05] active:scale-[0.95] transition-all"
-              >
-                <ImageIcon size={16} />
-                <span className="text-[10px] uppercase tracking-widest font-black">Design</span>
-              </Button>
-            </Link>
-          </div>
+          </Link>
         </div>
       </div>
     </Card>
