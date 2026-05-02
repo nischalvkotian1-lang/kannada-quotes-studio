@@ -88,7 +88,7 @@ export function QuoteCard({ quote }: QuoteCardProps) {
         <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black/90 backdrop-blur-[2px]" />
       </div>
 
-      <div className="relative z-10 p-6 sm:p-8 flex flex-col h-full min-h-[400px]">
+      <div className="relative z-10 p-6 sm:p-8 flex flex-col h-full min-h-[420px]">
         {/* Header Section */}
         <div className="mb-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-2 flex-shrink-0">
@@ -114,34 +114,34 @@ export function QuoteCard({ quote }: QuoteCardProps) {
           </Button>
         </div>
 
-        {/* Content Section */}
-        <div className="flex-grow mb-6">
-          <p className="kannada-text text-[1.5rem] sm:text-[1.75rem] font-bold leading-[1.4] text-white drop-shadow-lg">
+        {/* Content Section - Flex grow ensures it takes space but pushes actions down */}
+        <div className="flex-grow flex items-center mb-6">
+          <p className="kannada-text text-[1.5rem] sm:text-[1.75rem] font-bold leading-[1.4] text-white drop-shadow-lg w-full">
             {quote.text}
           </p>
         </div>
 
-        {/* Optional Personalization Section */}
+        {/* Optional Personalization Section - Clearly separated container */}
         {isPersonalizing && (
-          <div className="mb-6 p-4 glass rounded-3xl border-white/10 space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
+          <div className="mb-6 p-4 glass rounded-[1.75rem] border-white/10 space-y-4 animate-in fade-in slide-in-from-top-4 duration-500 shadow-xl bg-black/40 backdrop-blur-md">
             <div className="flex items-center gap-4">
               <button 
                 onClick={() => fileInputRef.current?.click()}
-                className="h-12 w-12 rounded-xl bg-black/40 border border-white/10 flex items-center justify-center overflow-hidden hover:border-primary/50 transition-colors group/photo flex-shrink-0"
+                className="h-14 w-14 rounded-xl bg-black/40 border border-white/10 flex items-center justify-center overflow-hidden hover:border-primary/50 transition-colors group/photo flex-shrink-0 shadow-inner"
               >
                 {userPhoto ? (
                   <img src={userPhoto} alt="User" className="h-full w-full object-cover" />
                 ) : (
-                  <Camera size={18} className="text-muted-foreground group-hover/photo:text-primary transition-colors" />
+                  <Camera size={20} className="text-muted-foreground group-hover/photo:text-primary transition-colors" />
                 )}
               </button>
               <div className="flex-1 space-y-1 min-w-0">
-                <label className="text-[8px] font-black uppercase tracking-widest text-muted-foreground ml-1">Profile Name</label>
+                <label className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Branding Name</label>
                 <Input 
                   value={userName}
                   onChange={(e) => setUserName(e.target.value)}
-                  placeholder="Your Name..."
-                  className="bg-black/40 border-white/5 h-9 rounded-xl text-xs focus:ring-primary w-full"
+                  placeholder="Enter your name..."
+                  className="bg-black/60 border-white/5 h-10 rounded-xl text-sm focus:ring-primary w-full text-white placeholder:text-white/20"
                 />
               </div>
             </div>
@@ -155,8 +155,8 @@ export function QuoteCard({ quote }: QuoteCardProps) {
           </div>
         )}
         
-        {/* Action Area - Guaranteed Visibility */}
-        <div className="flex flex-col gap-3 mt-auto pt-4 border-t border-white/5">
+        {/* Action Area - Organized as a solid base */}
+        <div className="flex flex-col gap-4 mt-auto pt-4 border-t border-white/5">
           {/* Icons Row */}
           <div className="flex items-center justify-between gap-2">
             <div className="flex gap-2">
@@ -188,17 +188,17 @@ export function QuoteCard({ quote }: QuoteCardProps) {
               )}
             >
               {isPersonalizing ? <X size={14} className="mr-2" /> : <User size={14} className="mr-2" />}
-              Personalize
+              {isPersonalizing ? "Close" : "Personalize"}
             </Button>
           </div>
 
-          {/* Primary Action - Full Width & Fixed Height */}
+          {/* Primary Action */}
           <Link href={makerUrl} className="block w-full">
             <Button 
               className="w-full h-14 gradient-orange text-black font-black gap-3 rounded-2xl glow-primary border-none hover:scale-[1.02] active:scale-[0.98] transition-all"
             >
               <ImageIcon size={20} />
-              <span className="text-[12px] uppercase tracking-[0.2em] font-black">Design Status</span>
+              <span className="text-[12px] uppercase tracking-[0.2em] font-black">Open Studio Maker</span>
             </Button>
           </Link>
         </div>
