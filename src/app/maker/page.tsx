@@ -65,7 +65,7 @@ function StatusMakerContent() {
   };
 
   return (
-    <div className="pb-36 page-transition">
+    <div className="pb-48 page-transition">
       <header className="px-6 pt-10 pb-6 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link href="/">
@@ -93,14 +93,14 @@ function StatusMakerContent() {
           />
           <div className="absolute inset-0 bg-black/60 backdrop-blur-[1px]" />
           
-          {/* Main Text Container with Safe Zone for Branding */}
+          {/* Main Text Container - Strictly restricted to prevent overlap with bottom branding */}
           <div className={cn(
-            "absolute inset-0 flex px-10 text-center transition-all duration-500",
-            textLayout.includes("Bottom") ? "items-end pb-40" : 
-            textLayout.includes("Top") ? "items-start pt-24" : "items-center pb-32"
+            "absolute left-10 right-10 flex text-center transition-all duration-500",
+            textLayout.includes("Bottom") ? "bottom-32 top-10 items-end" : 
+            textLayout.includes("Top") ? "top-20 bottom-32 items-start" : "top-10 bottom-36 items-center"
           )}>
             <p className={cn(
-              "kannada-text text-3xl leading-[1.4] drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)] w-full",
+              "kannada-text text-[1.65rem] sm:text-3xl leading-[1.4] drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)] w-full overflow-hidden",
               textLayout.includes("Bold") ? "font-black" : "font-medium",
               textLayout.includes("Serif") ? "font-serif" : "font-sans"
             )}
@@ -112,16 +112,16 @@ function StatusMakerContent() {
           {/* User Branding Overlay - Fixed in a dedicated bottom bar */}
           {(name || photo) && (
             <div className="absolute bottom-8 left-0 right-0 px-10 flex items-center justify-center animate-in fade-in slide-in-from-bottom-4 duration-1000">
-              <div className="flex items-center gap-3 glass-dark py-2 px-4 rounded-2xl border border-white/10 shadow-2xl">
+              <div className="flex items-center gap-3 glass-dark py-2 px-4 rounded-2xl border border-white/10 shadow-2xl max-w-[80%]">
                 {photo ? (
-                  <img src={photo} alt="User" className="h-8 w-8 rounded-lg border border-white/20 object-cover shadow-sm" />
+                  <img src={photo} alt="User" className="h-8 w-8 rounded-lg border border-white/20 object-cover shadow-sm flex-shrink-0" />
                 ) : (
-                  <div className="h-8 w-8 rounded-lg bg-white/10 flex items-center justify-center border border-white/10">
+                  <div className="h-8 w-8 rounded-lg bg-white/10 flex items-center justify-center border border-white/10 flex-shrink-0">
                     <User size={14} className="text-white/60" />
                   </div>
                 )}
                 {name && (
-                  <span className="text-xs font-bold text-white/90 tracking-tight">{name}</span>
+                  <span className="text-xs font-bold text-white/90 tracking-tight truncate">{name}</span>
                 )}
               </div>
             </div>
@@ -154,7 +154,7 @@ function StatusMakerContent() {
               <div className="flex items-center gap-4">
                 <button 
                   onClick={() => fileInputRef.current?.click()}
-                  className="h-12 w-12 rounded-xl bg-black/40 border border-white/10 flex items-center justify-center overflow-hidden hover:border-primary transition-colors"
+                  className="h-12 w-12 rounded-xl bg-black/40 border border-white/10 flex items-center justify-center overflow-hidden hover:border-primary transition-colors flex-shrink-0"
                 >
                   {photo ? (
                     <img src={photo} alt="User" className="h-full w-full object-cover" />
@@ -167,7 +167,7 @@ function StatusMakerContent() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Your Name..."
-                  className="bg-transparent border-none text-sm font-bold focus:ring-0 flex-1 text-white"
+                  className="bg-transparent border-none text-sm font-bold focus:ring-0 flex-1 text-white min-w-0"
                 />
               </div>
               <input type="file" ref={fileInputRef} onChange={handlePhotoUpload} accept="image/*" className="hidden" />
