@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { BottomNav } from "@/components/navigation/BottomNav";
 import { Button } from "@/components/ui/button";
@@ -29,7 +29,7 @@ const PRESET_LAYOUTS = [
   "Minimal Wide",
 ];
 
-export default function StatusMakerPage() {
+function StatusMakerContent() {
   const searchParams = useSearchParams();
   const initialQuote = searchParams.get("quote") || "ಬದುಕಿನ ಹಾದಿ ಅಷ್ಟು ಸುಲಭವಲ್ಲ, ಆದರೆ ಅಸಾಧ್ಯವೇನಲ್ಲ.";
   const initialName = searchParams.get("name") || "";
@@ -256,5 +256,12 @@ export default function StatusMakerPage() {
 
       <BottomNav />
     </div>
+  );
+}
+export default function StatusMakerPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <StatusMakerContent />
+    </Suspense>
   );
 }
